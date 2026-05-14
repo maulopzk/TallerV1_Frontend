@@ -1,11 +1,20 @@
 // En scripts/api.js
 async function doRegister(datos) {
+
+
     try {
-        const response = await fetch('http://localhost:3000/api/nuevo-cliente', {
+        const response = await fetch('https://backend-db-9fc8.onrender.com/api/nuevo-cliente', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(datos)
         });
+
+    // try {
+    //     const response = await fetch('http://localhost:3000/api/nuevo-cliente', {
+    //         method: 'POST',
+    //         headers: { 'Content-Type': 'application/json' },
+    //         body: JSON.stringify(datos)
+    //     });
 
         const result = await response.json();
 

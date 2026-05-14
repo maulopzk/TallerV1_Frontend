@@ -4,8 +4,8 @@ if (!stored) window.location.href = 'index.html';
 let currentUser = JSON.parse(stored);
 
 // ---------------------------------
-const API = 'http://localhost:3000/api';
-//const API = 'https://backend-db-9fc8.onrender.com/api'; 
+// const API = 'http://localhost:3000/api';
+const API = 'https://backend-db-9fc8.onrender.com/api'; 
 let DB = { roles: [], clientes: [], empleados: [], catalogo: [], ordenes: [], detalleOrden: [], vehiculos: [], pagos: [] };
 
 
@@ -801,7 +801,7 @@ async function guardarClienteApp() {
 
   console.log('Paquete listo para enviar:', datosRegistro);
 
-  
+
   const respuesta = await doRegister(datosRegistro);
 
   if (respuesta && respuesta.success) {
