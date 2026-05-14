@@ -8,6 +8,10 @@ let currentUser = JSON.parse(stored);
 const API = 'https://backend-db-9fc8.onrender.com/api'; 
 let DB = { roles: [], clientes: [], empleados: [], catalogo: [], ordenes: [], detalleOrden: [], vehiculos: [], pagos: [] };
 
+let cart = JSON.parse(localStorage.getItem('cart')) || []; 
+let selectedOrderType = 'Compra';
+
+
 
 async function init() {
   try {
@@ -51,6 +55,7 @@ function loginAs(user) {
   document.getElementById('topName').textContent = user._nombre || user.Username;
   document.getElementById('topRole').textContent = rol ? rol.Nombre : '—';
   buildSidebar();
+
 }
 
 // cerrar sesion
@@ -548,15 +553,15 @@ function renderClientCatalog() {
     </div>`).join('') || '<div style="color:var(--muted);padding:30px">Sin productos disponibles</div>';
 }
 
-function addToCart(idProducto) {
-  const p = DB.catalogo.find(x => x.IdProducto === idProducto);
-  if (!p) return;
-  const existing = cart.find(c => c.IdProducto === idProducto);
-  if (existing) { existing.Cantidad++; }
-  else { cart.push({ IdProducto: idProducto, Nombre: p.Nombre, Precio: p.Precio, Imagen: p.Imagen, Cantidad: 1 }); }
-  updateCartBadge();
-  showToast(`✅ ${p.Nombre} añadido al carrito`);
-}
+// function addToCart(idProducto) {
+//   const p = DB.catalogo.find(x => x.IdProducto === idProducto);
+//   if (!p) return;
+//   const existing = cart.find(c => c.IdProducto === idProducto);
+//   if (existing) { existing.Cantidad++; }
+//   else { cart.push({ IdProducto: idProducto, Nombre: p.Nombre, Precio: p.Precio, Imagen: p.Imagen, Cantidad: 1 }); }
+//   updateCartBadge();
+//   showToast(`✅ ${p.Nombre} añadido al carrito`);
+// }
 
 function updateCartBadge() {
   const count = cart.reduce((s, c) => s + c.Cantidad, 0);
@@ -589,44 +594,56 @@ function cartQty(id, delta) {
   const item = cart.find(c => c.IdProducto === id);
   if (!item) return;
   item.Cantidad += delta;
-  if (item.Cantidad <= 0) cartRemove(id);
-  else { updateCartBadge(); openCartModal(); }
+  
+  if (item.Cantidad <= 0) {
+    cartRemove(id);
+  } else { 
+    saveCart();
+    updateCartBadge(); 
+    openCartModal(); // Refrescamos el modal para ver el cambio
+  }
 }
 
 function cartRemove(id) {
   cart = cart.filter(c => c.IdProducto !== id);
+  saveCart();
   updateCartBadge();
   openCartModal();
 }
 
-function selectOrderType(el) {
-  document.querySelectorAll('.type-opt').forEach(e => e.classList.remove('selected'));
-  el.classList.add('selected');
-  selectedOrderType = el.dataset.type;
-}
-
 async function placeOrder() {
   if (cart.length === 0) { showToast('⚠️ Tu carrito está vacío'); return; }
+  
   try {
     const res = await fetch(`${API}/ordenes`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        IdCliente: currentUser.IdCliente,
+        IdCliente: currentUser.IdCliente, // Usamos el ID del usuario logueado
         Tipo: selectedOrderType,
         items: cart.map(c => ({ IdProducto: c.IdProducto, Cantidad: c.Cantidad, Precio: c.Precio }))
       })
     });
+    
     const data = await res.json();
     if (!data.ok) { showToast('❌ Error al crear orden'); return; }
+    
+    // LIMPIEZA
     cart = [];
+    localStorage.removeItem('cart'); // Borramos el carrito del navegador
+    
     updateCartBadge();
     closeModal('cartModal');
     showToast(`✅ ${selectedOrderType} confirmada. #${data.IdOrden}`);
+    
+    // Refrescamos datos locales
     DB.ordenes = await fetch(`${API}/ordenes`).then(r => r.json());
     DB.detalleOrden = await fetch(`${API}/detalle-ordenes`).then(r => r.json());
     navigateTo('clientOrdersPage');
-  } catch (err) { showToast('❌ Error al conectar'); }
+    
+  } catch (err) { 
+    showToast('❌ Error al conectar con el servidor'); 
+  }
 }
 
 // mis pedidos - cliente
@@ -647,43 +664,69 @@ function renderClientOrders() {
   }).join('') || '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:30px">Sin pedidos aún</td></tr>';
 }
 
-// ══ DETALLE DE ORDEN ══
+// ══ DETALLE DE ORDEN  ══
 function showOrderDetail(idOrden) {
   const o = DB.ordenes.find(x => x.IdOrden === idOrden);
   const cli = DB.clientes.find(c => c.IdCliente === o.IdCliente);
   const detalles = DB.detalleOrden.filter(d => d.IdOrden === idOrden);
   const total = detalles.reduce((s, d) => s + d.Precio * d.Cantidad, 0);
   const tagCls = o.Estado === 'Completado' ? 'tag-done' : o.Estado === 'Cancelado' ? 'tag-cancelled' : 'tag-pending';
+
+  // 1. AJUSTE DE ANCHO: Forzamos el modal a ser más ancho
+  const modalElem = document.querySelector('#orderDetailModal .modal');
+  if (modalElem) modalElem.style.width = 'min(850px, 95vw)';
+
   document.getElementById('orderDetailContent').innerHTML = `
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:25px;padding-bottom:15px;border-bottom:1px solid var(--border)">
       <div>
-        <div style="font-size:13px;color:var(--muted)">Orden #${o.IdOrden} · ${o.Fecha}</div>
-        <div style="font-weight:600;margin-top:2px">${cli ? cli.Nombre : '—'}</div>
-        ${cli ? `<div style="font-size:12px;color:var(--muted)">${cli.Telefono} · ${cli.Correo}</div>` : ''}
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--accent);letter-spacing:1px">ORDEN #${o.IdOrden}</div>
+        <div style="font-size:13px;color:var(--muted);margin-top:2px">Fecha: ${new Date(o.Fecha).toLocaleString()}</div>
       </div>
-      <span class="tag ${tagCls}" style="font-size:13px">${o.Estado}</span>
+      <div style="text-align:right">
+        <div style="font-weight:700;font-size:16px">${cli ? cli.Nombre : '—'}</div>
+        ${cli ? `<div style="font-size:12px;color:var(--muted)">${cli.Telefono} • ${cli.Correo}</div>` : ''}
+        <span class="tag ${tagCls}" style="display:inline-block;margin-top:8px;padding:4px 12px;font-size:11px">${o.Estado.toUpperCase()}</span>
+      </div>
     </div>
-    <table>
-      <thead><tr><th>Servicio/Producto</th><th>Cantidad</th><th>Precio unit.</th><th>Subtotal</th></tr></thead>
+
+    <table style="width:100%; border-collapse: collapse;">
+      <thead>
+        <tr style="text-align:left; border-bottom:2px solid var(--border); color:var(--muted); font-size:12px; text-transform:uppercase">
+          <th style="padding:10px 5px">Servicio / Producto</th>
+          <th style="padding:10px 5px">Cant.</th>
+          <th style="padding:10px 5px">Precio Unit.</th>
+          <th style="padding:10px 5px; text-align:right">Subtotal</th>
+        </tr>
+      </thead>
       <tbody>
         ${detalles.map(d => {
           const prod = DB.catalogo.find(p => p.IdProducto === d.IdProducto);
-          return `<tr>
-            <td>${prod ? `${prod.Imagen} ${prod.Nombre}` : 'Producto eliminado'}</td>
-            <td>${d.Cantidad}</td>
-            <td>$${d.Precio.toFixed(2)}</td>
-            <td style="font-family:'Bebas Neue',sans-serif;color:var(--accent)">$${(d.Precio * d.Cantidad).toFixed(2)}</td>
+          // 2. CORRECCIÓN DE IMAGEN: Usamos la etiqueta <img> en lugar de solo el texto
+          const imgSrc = (prod && prod.Imagen && prod.Imagen !== '???') ? prod.Imagen : 'https://via.placeholder.com/60?text=Servicio';
+          
+          return `
+          <tr style="border-bottom:1px solid var(--border)">
+            <td style="padding:15px 5px; display:flex; align-items:center; gap:15px">
+              <img src="${imgSrc}" style="width:55px; height:55px; border-radius:10px; object-fit:cover; background:#f5f5f5" onerror="this.src='https://via.placeholder.com/60?text=Error'">
+              <div style="font-weight:600; font-size:15px">${prod ? prod.Nombre : 'Servicio eliminado'}</div>
+            </td>
+            <td style="padding:15px 5px">${d.Cantidad}</td>
+            <td style="padding:15px 5px; color:var(--muted)">$${d.Precio.toFixed(2)}</td>
+            <td style="padding:15px 5px; text-align:right; font-family:'Bebas Neue',sans-serif; color:var(--accent); font-size:20px">
+              $${(d.Precio * d.Cantidad).toFixed(2)}
+            </td>
           </tr>`;
         }).join('')}
       </tbody>
     </table>
-    <div style="text-align:right;margin-top:16px;padding-top:12px;border-top:1px solid var(--border)">
-      <span style="color:var(--muted);font-size:13px">TOTAL: </span>
-      <span style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--accent)">$${total.toFixed(2)}</span>
+
+    <div style="text-align:right; margin-top:25px; padding:20px; background:rgba(0,0,0,0.02); border-radius:12px">
+      <span style="color:var(--muted); font-weight:600; font-size:14px; margin-right:15px">TOTAL DE LA ORDEN:</span>
+      <span style="font-family:'Bebas Neue',sans-serif; font-size:36px; color:var(--accent); line-height:1">$${total.toFixed(2)}</span>
     </div>`;
+
   openModal('orderDetailModal');
 }
-
 
 function openModal(id) { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
@@ -838,5 +881,36 @@ function openClientModal() {
 
   openModal2('clienteNuevoModal'); //abri modal
 }
+
+function saveCart() {
+    localStorage.setItem('cart', JSON.stringify(cart)); // Guarda el estado actual
+}
+
+function addToCart(idProducto) {
+  const p = DB.catalogo.find(x => x.IdProducto === idProducto);
+  if (!p) return;
+  
+  const existing = cart.find(c => c.IdProducto === idProducto);
+  if (existing) { 
+    existing.Cantidad++; 
+  } else { 
+    // Guardamos los datos necesarios del producto
+    cart.push({ 
+      IdProducto: idProducto, 
+      Nombre: p.Nombre, 
+      Precio: p.Precio, 
+      Imagen: p.Imagen, 
+      Cantidad: 1 
+    }); 
+  }
+  
+  saveCart(); // Persistimos en LocalStorage
+  updateCartBadge();
+  showToast(`✅ ${p.Nombre} añadido al carrito`);
+}
+
+
+
+
 
 init();

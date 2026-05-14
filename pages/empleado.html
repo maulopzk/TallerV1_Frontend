@@ -87,7 +87,7 @@
         <div class="section-title">Órdenes de Trabajo</div>
         <div class="section-sub">Compras, reservaciones y apartados de clientes</div>
         <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap">
-          <input type="text" id="ordersSearch" placeholder="🔍  Buscar..." style="max-width:220px" oninput="renderAdminOrders()">
+          <input type="text" id="ordersSearch" placeholder="🔍  Buscar cliente..." style="max-width:220px" oninput="renderAdminOrders()">
           <select id="ordersFilter" style="max-width:180px" onchange="renderAdminOrders()">
             <option value="">Todos los tipos</option>
             <option value="Compra">Compra</option>
@@ -101,7 +101,7 @@
             <option value="Cancelado">Cancelado</option>
           </select>
         </div>
-        <table><thead><tr><th>#Orden</th><th>Cliente</th><th>Tipo</th><th>Fecha</th><th>Total</th><th>Estado</th><th>Acciones</th></tr></thead>
+        <table><thead><tr><th>#Orden</th><th>Cliente</th><th>Descripcion</th><th>Fecha</th><th>Total</th><th>Estado del servicio</th><th>Cambiar estado del servicio</th></tr></thead>
         <tbody id="adminOrdersTbody"></tbody></table>
       </section>
       <!-- CLIENTES (empleado) -->
