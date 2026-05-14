@@ -1,0 +1,76 @@
+:root {
+    --bg: #0a0a0a;
+    --bg2: #111111;
+    --bg3: #1a1a1a;
+    --card: #161616;
+    --border: #2a2a2a;
+    --accent: #e8a020;
+    --accent2: #ff6b35;
+    --text: #f0f0f0;
+    --muted: #888;
+    --danger: #e03030;
+    --success: #28a745;
+    --info: #1a8aff;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'Barlow',sans-serif; min-height:100vh; overflow-x:hidden; }
+
+  
+  /* ── GLOBAL ── */
+  .hidden { display:none !important; }
+  .page { display:none; } .page.active { display:block; }
+  input,select,textarea { background:var(--bg3); border:1px solid var(--border); color:var(--text); padding:10px 14px; border-radius:6px; font-family:'Barlow',sans-serif; font-size:14px; width:100%; transition:.2s; }
+  input:focus,select:focus,textarea:focus { outline:none; border-color:var(--accent); }
+  label { font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px; }
+  .form-group { margin-bottom:16px; }
+  .btn { padding:10px 22px; border:none; border-radius:6px; cursor:pointer; font-family:'Barlow',sans-serif; font-weight:600; font-size:14px; transition:.2s; letter-spacing:.04em; }
+  .btn-accent { background:var(--accent); color:#000; } .btn-accent:hover { background:#f0b030; transform:translateY(-1px); }
+  .btn-danger { background:var(--danger); color:#fff; } .btn-danger:hover { filter:brightness(1.2); }
+  .btn-ghost { background:transparent; border:1px solid var(--border); color:var(--text); } .btn-ghost:hover { border-color:var(--accent); color:var(--accent); }
+  .btn-success { background:var(--success); color:#fff; } .btn-success:hover { filter:brightness(1.2); }
+  .btn-info { background:var(--info); color:#fff; }
+  .tag { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; }
+  .tag-pending { background:#2a1a00; color:var(--accent); } .tag-done { background:#0d2a18; color:var(--success); } .tag-cancelled { background:#2a0d0d; color:var(--danger); }
+  .toast { position:fixed; bottom:24px; right:24px; background:var(--bg3); border:1px solid var(--accent); color:var(--text); padding:12px 20px; border-radius:8px; z-index:9999; font-size:14px; animation:slideIn .3s ease; }
+  @keyframes slideIn { from{transform:translateX(60px);opacity:0} to{transform:translateX(0);opacity:1} }
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.75); z-index:500; align-items:center; justify-content:center; }
+  .modal-overlay.open { display:flex; }
+  .modal { background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:32px; width:min(500px,95vw); max-height:90vh; overflow-y:auto; position:relative; }
+  .modal h3 { font-family:'Bebas Neue',sans-serif; font-size:26px; letter-spacing:.05em; margin-bottom:20px; color:var(--accent); }
+  .modal-close { position:absolute; top:16px; right:20px; background:none; border:none; color:var(--muted); font-size:22px; cursor:pointer; line-height:1; }
+  .modal-close:hover { color:var(--text); }
+  table { width:100%; border-collapse:collapse; font-size:14px; }
+  th { text-align:left; padding:10px 14px; font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); border-bottom:1px solid var(--border); }
+  td { padding:11px 14px; border-bottom:1px solid #1e1e1e; vertical-align:middle; }
+  tr:hover td { background:var(--bg3); }
+  .actions-cell { display:flex; gap:6px; }
+  .section-title { font-family:'Bebas Neue',sans-serif; font-size:32px; letter-spacing:.06em; color:var(--text); margin-bottom:6px; }
+  .section-sub { color:var(--muted); font-size:14px; margin-bottom:28px; }
+  .stat-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:20px 24px; }
+  .stat-card .num { font-family:'Bebas Neue',sans-serif; font-size:40px; color:var(--accent); line-height:1; }
+  .stat-card .lbl { font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; margin-top:4px; }
+  .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+  @media(max-width:768px) { .grid-3,.grid-4 { grid-template-columns:1fr 1fr; } .grid-2 { grid-template-columns:1fr; } }
+
+  /* ── LOGIN PAGE ── */
+  #loginPage { min-height:100vh; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; }
+  .login-bg { 
+    position:absolute; 
+    inset:0;
+    background-color: whitesmoke; 
+  }
+  .login-gear { position:absolute; font-size:420px; color:#1a1a1a; right:-60px; bottom:-80px; pointer-events:none; line-height:1; opacity:.4; }
+  .login-gear2 { position:absolute; font-size:180px; color:#141414; left:20px; top:-40px; pointer-events:none; line-height:1; opacity:.5; }
+  .login-box { position:relative; z-index:2; width:420px; }
+  .login-logo { text-align:center; margin-bottom:40px; }
+  .login-logo .brand { font-family:'Bebas Neue',sans-serif; font-size:58px; letter-spacing:.1em; background:linear-gradient(135deg,var(--accent),var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; display:block; line-height:1; }
+  .login-logo .sub { font-size:12px; color:var(--muted); letter-spacing:.25em; text-transform:uppercase; margin-top:4px; }
+  .login-card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:36px; }
+  .login-card .tabs { display:flex; gap:0; margin-bottom:28px; background:var(--bg3); border-radius:8px; padding:4px; }
+  .login-card .tab { flex:1; text-align:center; padding:8px; border-radius:6px; cursor:pointer; font-size:13px; font-weight:600; color:var(--muted); letter-spacing:.04em; transition:.2s; }
+  .login-card .tab.active { background:var(--accent); color:#000; }
+  .login-divider { text-align:center; color:var(--muted); font-size:12px; margin:16px 0; position:relative; }
+  .login-divider::before,.login-divider::after { content:''; position:absolute; top:50%; width:40%; height:1px; background:var(--border); }
+  .login-divider::before { left:0; } .login-divider::after { right:0; }

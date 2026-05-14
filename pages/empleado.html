@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rey Enigma</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>♟️</text></svg>">
+    <link rel="stylesheet" href="../css/empleado.css" />
+     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    
+
+    <!-- ══════════════ APP PAGE ══════════════ -->
+<div id="appPage" class="page">
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="topbar-brand">Rey Enigma</div>
+    <div class="topbar-right">
+      <div class="user-badge">
+        <div class="user-avatar" id="topAvatar">?</div>
+        <div>
+          <div class="user-name" id="topName">—</div>
+          <div class="user-role" id="topRole">—</div>
+        </div>
+      </div>
+      <button class="btn btn-ghost" style="padding:7px 14px;font-size:13px" onclick="doLogout()">Salir</button>
+    </div>
+  </header>
+
+  <div class="shell">
+    <!-- SIDEBAR -->
+    <nav class="sidebar" id="sidebar"></nav>
+
+    <!-- MAIN -->
+    <main class="main" id="mainContent">
+      <!-- SUB-PAGES injected here -->
+
+      <!-- DASHBOARD -->
+      <section id="dashPage" class="sub-page hidden">
+        <p class="welcome">Bienvenido, <span id="dashName">—</span></p>
+        
+        <p style="color:var(--muted);margin-bottom:28px;font-size:15px">Panel de control</p>
+        <!-- Elementos del panel de inicio -->
+        <div id="statsRow" class="grid-4" style="margin-bottom:28px"></div>
+
+        <div class="grid-2">
+          <div>
+            <div class="section-title" style="font-size:22px;margin-bottom:12px">Actividad reciente</div>
+            <ul class="activity-feed" id="activityFeed"></ul>
+          </div>
+          <div>
+            <div class="section-title" style="font-size:22px;margin-bottom:12px">Estado de órdenes</div>
+            <canvas id="ordersChart" width="300" height="200"></canvas>
+          </div>
+        </div>
+      </section>
+
+
+
+      <!-- CATALOGO (admin) -->
+      <section id="adminCatalogPage" class="sub-page hidden">
+        <div class="section-title">Gestión de Catálogo</div>
+        <div class="section-sub">Crea, edita y elimina productos y servicios del taller</div>
+        <div style="display:flex;gap:10px;margin-bottom:20px;align-items:center">
+          <input type="text" id="catalogSearch" placeholder="🔍  Buscar producto..." style="max-width:280px" oninput="renderAdminCatalog()">
+          <button class="btn btn-accent" onclick="openCatalogModal()">+ Nuevo Producto</button>
+        </div>
+        <table><thead><tr><th>Icono</th><th>Nombre</th><th>Descripción</th><th>Precio</th><th>Estado</th><th>Acciones</th></tr></thead>
+        <tbody id="adminCatalogTbody"></tbody></table>
+      </section>
+
+      <!-- USUARIOS (admin)
+      <section id="adminUsersPage" class="sub-page hidden">
+        <div class="section-title">Gestión de Usuarios</div>
+        <div class="section-sub">Administra cuentas, roles y accesos del sistema</div>
+        <div style="display:flex;gap:10px;margin-bottom:20px">
+          <input type="text" id="usersSearch" placeholder="🔍  Buscar usuario..." style="max-width:280px" oninput="renderAdminUsers()">
+          <button class="btn btn-accent" onclick="openUserModal()">+ Nuevo Usuario</button>
+        </div>
+        <table><thead><tr><th>ID</th><th>Username</th><th>Nombre</th><th>Rol</th><th>Correo</th><th>Estado</th><th>Acciones</th></tr></thead>
+        <tbody id="adminUsersTbody"></tbody></table>
+      </section> -->
+
+      <!-- ORDENES (admin) -->
+      <section id="adminOrdersPage" class="sub-page hidden">
+        <div class="section-title">Órdenes de Trabajo</div>
+        <div class="section-sub">Compras, reservaciones y apartados de clientes</div>
+        <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap">
+          <input type="text" id="ordersSearch" placeholder="🔍  Buscar..." style="max-width:220px" oninput="renderAdminOrders()">
+          <select id="ordersFilter" style="max-width:180px" onchange="renderAdminOrders()">
+            <option value="">Todos los tipos</option>
+            <option value="Compra">Compra</option>
+            <option value="Reservacion">Reservación</option>
+            <option value="Apartado">Apartado</option>
+          </select>
+          <select id="ordersStatusFilter" style="max-width:180px" onchange="renderAdminOrders()">
+            <option value="">Todos los estados</option>
+            <option value="Pendiente">Pendiente</option>
+            <option value="Completado">Completado</option>
+            <option value="Cancelado">Cancelado</option>
+          </select>
+        </div>
+        <table><thead><tr><th>#Orden</th><th>Cliente</th><th>Tipo</th><th>Fecha</th><th>Total</th><th>Estado</th><th>Acciones</th></tr></thead>
+        <tbody id="adminOrdersTbody"></tbody></table>
+      </section>
+      <!-- CLIENTES (empleado) -->
+      <section id="adminClientPage" class="sub-page hidden">
+        <div class="section-title">Clientes</div>
+        <div class="section-sub">Lista de clientes registrados</div>
+
+        <div style="display:flex;gap:10px;margin-bottom:20px">
+          <input
+            type="text"
+            id="usersSearch"
+            placeholder="🔍 Buscar cliente..."
+            style="max-width:280px"
+            oninput="renderClientes()">
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Teléfono</th>
+              <th>Correo</th>
+              <th>Direccion</th>
+              
+            </tr>
+          </thead>
+
+          <tbody id="ClientesBody"></tbody>
+        </table>
+      </section>
+
+      <!-- CATALOGO (cliente) -->
+      <section id="clientCatalogPage" class="sub-page hidden">
+        <div class="section-title">Nuestros Servicios & Productos</div>
+        <div class="section-sub">Selecciona lo que necesitas para tu vehículo</div>
+        <div style="margin-bottom:16px">
+          <input type="text" id="clientCatalogSearch" placeholder="🔍  Buscar servicios..." style="max-width:320px" oninput="renderClientCatalog()">
+        </div>
+        <div class="catalog-grid" id="clientCatalogGrid"></div>
+      </section>
+
+
+
+      <!-- MIS ORDENES (cliente) -->
+      <section id="clientOrdersPage" class="sub-page hidden">
+        <div class="section-title">Mis Reservas & Pedidos</div>
+        <div class="section-sub">Historial de tus compras, reservaciones y apartados</div>
+        <table><thead><tr><th>#Orden</th><th>Tipo</th><th>Fecha</th><th>Total</th><th>Estado</th><th>Detalle</th></tr></thead>
+        <tbody id="clientOrdersTbody"></tbody></table>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- CART FAB -->
+<button class="cart-fab hidden" id="cartFab" onclick="openCartModal()">
+  🛒
+  <span class="cart-count hidden" id="cartCount">0</span>
+</button>
+
+<!-- ══ MODALES ══ -->
+
+<!-- Catalog Modal -->
+<div class="modal-overlay" id="catalogModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('catalogModal')">✕</button>
+    <h3 id="catalogModalTitle">Nuevo Producto</h3>
+    <input type="hidden" id="catalogEditId">
+    <div class="form-group"><label>Nombre del producto/servicio</label><input type="text" id="catName"></div>
+    <div class="form-group"><label>Descripción</label><textarea id="catDesc" rows="3"></textarea></div>
+    <div class="grid-2">
+      <div class="form-group"><label>Precio ($)</label><input type="number" id="catPrice" step="0.01" min="0"></div>
+      <div class="form-group"><label>Icono (emoji)</label><input type="text" id="catEmoji" placeholder="🔧" maxlength="4"></div>
+    </div>
+    <div class="form-group">
+      <label>Estado</label>
+      <select id="catActivo"><option value="1">Activo</option><option value="0">Inactivo</option></select>
+    </div>
+    <button class="btn btn-accent" style="width:100%" onclick="saveCatalog()">Guardar</button>
+  </div>
+</div>
+
+<!-- User Modal -->
+<div class="modal-overlay" id="userModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('userModal')">✕</button>
+    <h3 id="userModalTitle">Nuevo Usuario</h3>
+    <input type="hidden" id="userEditId">
+    <div class="grid-2">
+      <div class="form-group"><label>Nombre completo</label><input type="text" id="uNombre"></div>
+      <div class="form-group"><label>Teléfono</label><input type="text" id="uTel"></div>
+    </div>
+    <div class="form-group"><label>Correo</label><input type="email" id="uCorreo"></div>
+    <div class="form-group"><label>Puesto</label><input type="text" id="uPuesto" placeholder="Mecánico, Recepcionista..."></div>
+    <div class="form-group"><label>Username</label><input type="text" id="uUsername"></div>
+    <div class="form-group" id="uPassGroup"><label>Contraseña</label><input type="password" id="uPass"></div>
+    <div class="grid-2">
+      <div class="form-group"><label>Rol</label>
+        <select id="uRol">
+          <option value="1">Administrador</option>
+          <option value="2">Empleado</option>
+          <!-- <option value="3">Cliente</option> -->
+        </select>
+      </div>
+      <div class="form-group"><label>Estado</label>
+        <select id="uActivo"><option value="1">Activo</option><option value="0">Inactivo</option></select>
+      </div>
+    </div>
+    <button class="btn btn-accent" style="width:100%" onclick="saveUser()">Guardar</button>
+  </div>
+</div>
+
+<!-- Cart Modal -->
+<div class="modal-overlay" id="cartModal">
+  <div class="modal" style="width:min(560px,95vw)">
+    <button class="modal-close" onclick="closeModal('cartModal')">✕</button>
+    <h3>Tu Carrito</h3>
+    <div id="cartItems"></div>
+    <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+      <div><span style="color:var(--muted);font-size:13px">Total</span><div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--accent)" id="cartTotal">$0.00</div></div>
+    </div>
+    <div class="type-selector" style="margin-top:20px">
+      <div class="type-opt selected" data-type="Compra" onclick="selectOrderType(this)">
+        <div class="type-icon">💳</div><div class="type-lbl">Compra</div>
+      </div>
+      <div class="type-opt" data-type="Reservacion" onclick="selectOrderType(this)">
+        <div class="type-icon">📅</div><div class="type-lbl">Reservación</div>
+      </div>
+      <div class="type-opt" data-type="Apartado" onclick="selectOrderType(this)">
+        <div class="type-icon">📌</div><div class="type-lbl">Apartado</div>
+      </div>
+    </div>
+    <button class="btn btn-accent" style="width:100%" onclick="placeOrder()">Confirmar Pedido</button>
+  </div>
+</div>
+
+<!-- Order Detail Modal -->
+<div class="modal-overlay" id="orderDetailModal">
+  <div class="modal" style="width:min(580px,95vw)">
+    <button class="modal-close" onclick="closeModal('orderDetailModal')">✕</button>
+    <h3>Detalle de Orden</h3>
+    <div id="orderDetailContent"></div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast hidden" id="toast"></div>
+<script src="../scripts/dashboard.js"></script>
+</body>
+</html>

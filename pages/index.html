@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Taller Rey Enigma</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/index.css" />
+
+</head>
+
+<body>
+<!-- ══════════════ LOGIN PAGE ══════════════ -->
+<div id="loginPage" class="page active">
+  <div class="login-bg"></div>
+  <div class="login-gear">⚙</div>
+  <div class="login-gear2">⚙</div>
+  <div class="login-box">
+    <div class="login-logo">
+      <span class="brand">Rey Enigma</span>
+      <span class="sub">Taller Mecánico</span>
+    </div>
+    <div class="login-card">
+      <div class="tabs">
+        <div class="tab active" onclick="switchAuthTab('login')">Iniciar Sesión</div>
+        <div class="tab" onclick="switchAuthTab('register')">Registrarse</div>
+      </div>
+
+      <!-- view inicio de sesion -->
+      <div id="loginForm">
+      <div class="form-group"><label>Usuario</label><input type="text" id="loginUser" placeholder="Tu username"></div>
+      <div class="form-group"><label>Contraseña</label><input type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter') doLogin()"></div>
+      <button class="btn btn-accent" style="width:100%;margin-top:4px" onclick="doLogin()">Entrar</button>
+      </div>
+
+      <!-- view registro de cliente -->
+      <div id="registerForm" class="hidden">
+        <div class="grid-2">
+          <div class="form-group"><label>Nombre completo</label><input type="text" id="cNombre" placeholder="Juan Pérez"></div>
+          <div class="form-group"><label>Teléfono</label><input type="text" id="cTelefono" placeholder="961 000 0000"></div>
+        </div>
+        <div class="form-group"><label>Correo electrónico</label><input type="email" id="cCorreo" placeholder="correo@ejemplo.com"></div>
+        <div class="form-group"><label>Username</label><input type="text" id="cUsername" placeholder="usuario123"></div>
+        <div class="grid-2">
+          <div class="form-group"><label>Contraseña</label><input type="password" id="cPass" placeholder="••••••••"></div>
+          <div class="form-group"><label>Confirmar contraseña</label><input type="password" id="cPass2" placeholder="••••••••"></div>
+        </div>
+        <button class="btn btn-accent" style="width:100%;margin-top:4px" onclick="guardarClienteLogin()">Crear cuenta</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script src="../scripts/registroCliente.js"></script>
+<script src="../scripts/login.js"></script>
+<!-- <script src="../scripts/dashboard.js"></script> -->
+
+</body>
+</html>

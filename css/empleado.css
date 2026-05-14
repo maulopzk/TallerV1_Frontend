@@ -1,0 +1,142 @@
+:root {
+    --bg: #ffffff;
+    --bg2: #f7fdf9;
+    --bg3: #edf7f1;
+    --card: #f0faf4;
+    --border: #c4e8d4;
+    --accent: #2db36a;
+    --accent2: #1a9a55;
+    --text: #1a2e22;
+    --muted: #5a9070;
+    --danger: #dc2626;
+    --success: #16a34a;
+    --info: #0284c7;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { 
+    background:var(--bg); color:var(--text); 
+    font-family: 'Inter', sans-serif; 
+    min-height:100vh; 
+    overflow-x:hidden; }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width:6px; } ::-webkit-scrollbar-track { background:#111; } ::-webkit-scrollbar-thumb { background:var(--accent); border-radius:3px; }
+
+  /* ── GLOBAL ── */
+  .hidden { display:none !important; }
+  .page { display:none; } .page.active { display:block; }
+  input,select,textarea { background:var(--bg3); border:1px solid var(--border); color:var(--text); padding:10px 14px; border-radius:6px; font-family:'Barlow',sans-serif; font-size:14px; width:100%; transition:.2s; }
+  input:focus,select:focus,textarea:focus { outline:none; border-color:var(--accent); }
+  label { font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px; }
+  .form-group { margin-bottom:16px; }
+  .btn { padding:10px 22px; border:none; border-radius:6px; cursor:pointer; font-family:'Barlow',sans-serif; font-weight:600; font-size:14px; transition:.2s; letter-spacing:.04em; }
+  .btn-accent { background:var(--accent); color:#000; } .btn-accent:hover { background:#f0b030; transform:translateY(-1px); }
+  .btn-danger { background:var(--danger); color:#fff; } .btn-danger:hover { filter:brightness(1.2); }
+  .btn-ghost { background:transparent; border:1px solid var(--border); color:var(--text); } .btn-ghost:hover { border-color:var(--accent); color:var(--accent); }
+  .btn-success { background:var(--success); color:#fff; } .btn-success:hover { filter:brightness(1.2); }
+  .btn-info { background:var(--info); color:#fff; }
+  .tag { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; }
+  .tag-pending { background:#2a1a00; color:var(--accent); } .tag-done { background:#0d2a18; color:var(--success); } .tag-cancelled { background:#2a0d0d; color:var(--danger); }
+  .toast { position:fixed; bottom:24px; right:24px; background:var(--bg3); border:1px solid var(--accent); color:var(--text); padding:12px 20px; border-radius:8px; z-index:9999; font-size:14px; animation:slideIn .3s ease; }
+  @keyframes slideIn { from{transform:translateX(60px);opacity:0} to{transform:translateX(0);opacity:1} }
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.75); z-index:500; align-items:center; justify-content:center; }
+  .modal-overlay.open { display:flex; }
+  .modal { background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:32px; width:min(500px,95vw); max-height:90vh; overflow-y:auto; position:relative; }
+  .modal h3 { font-family:'Bebas Neue',sans-serif; font-size:26px; letter-spacing:.05em; margin-bottom:20px; color:var(--accent); }
+  .modal-close { position:absolute; top:16px; right:20px; background:none; border:none; color:var(--muted); font-size:22px; cursor:pointer; line-height:1; }
+  .modal-close:hover { color:var(--text); }
+  table { width:100%; border-collapse:collapse; font-size:14px; }
+  th { text-align:left; padding:10px 14px; font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); border-bottom:1px solid var(--border); }
+  td { padding:11px 14px; border-bottom:1px solid #1e1e1e; vertical-align:middle; }
+  tr:hover td { background:var(--bg3); }
+  .actions-cell { display:flex; gap:6px; }
+  .section-title { font-family:'Bebas Neue',sans-serif; font-size:32px; letter-spacing:.06em; color:var(--text); margin-bottom:6px; }
+  .section-sub { color:var(--muted); font-size:14px; margin-bottom:28px; }
+  .stat-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:20px 24px; }
+  .stat-card .num { font-family:'Bebas Neue',sans-serif; font-size:40px; color:var(--accent); line-height:1; }
+  .stat-card .lbl { font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; margin-top:4px; }
+  .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+  @media(max-width:768px) { .grid-3,.grid-4 { grid-template-columns:1fr 1fr; } .grid-2 { grid-template-columns:1fr; } }
+
+  /* ── LOGIN PAGE ── */
+  #loginPage { min-height:100vh; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; }
+  .login-bg { position:absolute; inset:0; background:radial-gradient(ellipse at 60% 40%, #1a0f00 0%, #0a0a0a 70%); }
+  .login-gear { position:absolute; font-size:420px; color:#1a1a1a; right:-60px; bottom:-80px; pointer-events:none; line-height:1; opacity:.4; }
+  .login-gear2 { position:absolute; font-size:180px; color:#141414; left:20px; top:-40px; pointer-events:none; line-height:1; opacity:.5; }
+  .login-box { position:relative; z-index:2; width:420px; }
+  .login-logo { text-align:center; margin-bottom:40px; }
+  .login-logo .brand { font-family:'Bebas Neue',sans-serif; font-size:58px; letter-spacing:.1em; background:linear-gradient(135deg,var(--accent),var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; display:block; line-height:1; }
+  .login-logo .sub { font-size:12px; color:var(--muted); letter-spacing:.25em; text-transform:uppercase; margin-top:4px; }
+  .login-card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:36px; }
+  .login-card .tabs { display:flex; gap:0; margin-bottom:28px; background:var(--bg3); border-radius:8px; padding:4px; }
+  .login-card .tab { flex:1; text-align:center; padding:8px; border-radius:6px; cursor:pointer; font-size:13px; font-weight:600; color:var(--muted); letter-spacing:.04em; transition:.2s; }
+  .login-card .tab.active { background:var(--accent); color:#000; }
+  .login-divider { text-align:center; color:var(--muted); font-size:12px; margin:16px 0; position:relative; }
+  .login-divider::before,.login-divider::after { content:''; position:absolute; top:50%; width:40%; height:1px; background:var(--border); }
+  .login-divider::before { left:0; } .login-divider::after { right:0; }
+
+  /* ── APP SHELL ── */
+  #appPage { min-height:100vh; display:flex; flex-direction:column; }
+  #appPage.hidden { display:none; }
+  .topbar { background:var(--bg2); border-bottom:1px solid var(--border); padding:0 28px; height:60px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; }
+  .topbar-brand { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:.1em; background:linear-gradient(90deg,var(--accent),var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .topbar-right { display:flex; align-items:center; gap:16px; }
+  .user-badge { display:flex; align-items:center; gap:8px; }
+  .user-avatar { width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--accent2)); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; color:#000; }
+  .user-name { font-size:14px; font-weight:600; }
+  .user-role { font-size:11px; color:var(--muted); }
+  .shell { display:flex; flex:1; }
+  .sidebar { width:220px; background:var(--bg2); border-right:1px solid var(--border); padding:20px 0; flex-shrink:0; }
+  .nav-item { display:flex; align-items:center; gap:10px; padding:11px 24px; cursor:pointer; font-size:14px; font-weight:500; color:var(--muted); transition:.15s; border-left:3px solid transparent; }
+  .nav-item:hover { color:var(--text); background:var(--bg3); }
+  .nav-item.active { color:var(--accent); border-left-color:var(--accent); background:rgba(232,160,32,.07); }
+  .nav-icon { font-size:16px; width:18px; text-align:center; }
+  .nav-section { font-size:10px; color:var(--border); text-transform:uppercase; letter-spacing:.12em; padding:14px 24px 6px; }
+  .main { flex:1; padding:32px 36px; overflow-y:auto; }
+  @media(max-width:768px) { .sidebar { width:52px; } .nav-item span { display:none; } .nav-section { display:none; } .main { padding:20px 16px; } }
+
+  /* ── CATALOG CARDS ── */
+  .catalog-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:20px; margin-top:24px; }
+  .cat-card { background:var(--card); border:1px solid var(--border); border-radius:12px; overflow:hidden; transition:.25s; }
+  .cat-card:hover { border-color:var(--accent); transform:translateY(-3px); box-shadow:0 8px 30px rgba(232,160,32,.1); }
+  .cat-img { height:160px; background:var(--bg3); display:flex; align-items:center; justify-content:center; font-size:54px; position:relative; overflow:hidden; }
+  .cat-img::after { content:''; position:absolute; inset:0; background:linear-gradient(to bottom, transparent 50%, rgba(0,0,0,.5) 100%); }
+  .cat-body { padding:16px; }
+  .cat-name { font-family:'Barlow Condensed',sans-serif; font-size:18px; font-weight:700; letter-spacing:.04em; margin-bottom:4px; }
+  .cat-desc { font-size:12px; color:var(--muted); margin-bottom:12px; line-height:1.5; min-height:36px; }
+  .cat-price { font-family:'Bebas Neue',sans-serif; font-size:26px; color:var(--accent); letter-spacing:.05em; }
+  .cat-actions { display:flex; gap:8px; margin-top:14px; }
+  .cat-badge { position:absolute; top:10px; right:10px; z-index:1; }
+
+  /* ── ORDERS TABLE ── */
+  .order-row-detail { background:var(--bg3); }
+  .order-detail-inner { padding:16px 24px; }
+
+  /* ── CART ── */
+  .cart-fab { position:fixed; bottom:28px; right:28px; width:54px; height:54px; border-radius:50%; background:var(--accent); color:#000; font-size:22px; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 4px 20px rgba(232,160,32,.4); z-index:200; border:none; transition:.2s; }
+  .cart-fab:hover { transform:scale(1.1); }
+  .cart-count { position:absolute; top:-4px; right:-4px; background:var(--danger); color:#fff; border-radius:50%; width:20px; height:20px; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+  .cart-item { display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--border); }
+  .cart-item-icon { width:44px; height:44px; background:var(--bg3); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+  .cart-item-name { font-weight:600; font-size:14px; }
+  .cart-item-price { font-size:12px; color:var(--accent); margin-top:2px; }
+  .cart-item-qty { display:flex; align-items:center; gap:6px; margin-left:auto; }
+  .qty-btn { width:26px; height:26px; border-radius:4px; border:1px solid var(--border); background:transparent; color:var(--text); cursor:pointer; font-size:14px; display:flex; align-items:center; justify-content:center; }
+  .qty-btn:hover { border-color:var(--accent); color:var(--accent); }
+
+  /* ── TYPE SELECTOR ── */
+  .type-selector { display:flex; gap:10px; margin-bottom:20px; }
+  .type-opt { flex:1; border:2px solid var(--border); border-radius:10px; padding:16px; cursor:pointer; text-align:center; transition:.2s; }
+  .type-opt:hover { border-color:var(--muted); }
+  .type-opt.selected { border-color:var(--accent); background:rgba(232,160,32,.08); }
+  .type-opt .type-icon { font-size:28px; margin-bottom:6px; }
+  .type-opt .type-lbl { font-size:13px; font-weight:600; }
+
+  /* ── DASHBOARD ── */
+  #dashPage .welcome { font-family:'Bebas Neue',sans-serif; font-size:44px; letter-spacing:.05em; line-height:1.1; }
+  #dashPage .welcome span { color:var(--accent); }
+  .activity-feed { list-style:none; }
+  .activity-feed li { display:flex; gap:12px; padding:12px 0; border-bottom:1px solid #1a1a1a; font-size:13px; align-items:flex-start; }
+  .activity-dot { width:8px; height:8px; border-radius:50%; background:var(--accent); flex-shrink:0; margin-top:4px; }
